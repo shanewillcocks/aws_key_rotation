@@ -16,7 +16,7 @@ fi
 aws_id=$1
 rds_id=$2
 epoch_ts=$(date +'%s')
-backup_vault="BNZ-backup-vault-daily"
+backup_vault="Backup-vault-daily"
 
 delete_ebs_volumes () {
   ebs_volumes=$(aws ec2 describe-volumes --filters "Name=status,Values=available" --query 'Volumes[*].VolumeId' --output text)
