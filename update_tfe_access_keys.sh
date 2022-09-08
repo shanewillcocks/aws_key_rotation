@@ -2,8 +2,10 @@
 # Update Terraform Account with new AWS access keys
 #-----------------------------------------------------
 target_workspaces=""
-echo "New Access Key ID is for ${target_iam_account_name} in AWS account ${AWS_Account} is" #{Octopus.Action[Rotate terraform_provisioner Keys in AWS].Output.new_access_key_id}
-echo "New Secret Key ID is for ${target_iam_account_name} in AWS account ${AWS_Account} is" #{Octopus.Action[Rotate terraform_provisioner Keys in AWS].Output.new_access_key_secret}
+#DEBUG
+#echo "New Access Key ID is for ${target_iam_account_name} in AWS account ${AWS_Account} is" #{Octopus.Action[Rotate terraform_provisioner Keys in AWS].Output.new_access_key_id}
+#echo "New Secret Key ID is for ${target_iam_account_name} in AWS account ${AWS_Account} is" #{Octopus.Action[Rotate terraform_provisioner Keys in AWS].Output.new_access_key_secret}
+
 # Get access key values from Step 1
 target_aws_access_key_id_value="#{Octopus.Action[Rotate terraform_provisioner Keys in AWS].Output.current_access_key_id}"
 target_aws_access_key_id_new_value="#{Octopus.Action[Rotate terraform_provisioner Keys in AWS].Output.new_access_key_id}"
@@ -65,3 +67,4 @@ do
     fi 
   done
 done
+
