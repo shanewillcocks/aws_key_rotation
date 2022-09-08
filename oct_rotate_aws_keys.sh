@@ -29,10 +29,11 @@ fi
 echo "Creating new access key for ${iam_account}"
 new_key=$(aws iam create-access-key --user-name ${iam_account})
 
-Set-OctopusVariable -name "currentAccessKeyID" -value ${active_key}
-Set-OctopusVariable -name "newAccessKeyID" -value $(echo ${new_key} | jq -r '.[].AccessKeyId')
-Set-OctopusVariable -name "newAccessKeySecret" -value $(echo ${new_key} | jq -r '.[].SecretAccessKey')
-Set-OctopusVariable -name "userName" -value ${iam_account}
+# Octopus integration
+#Set-OctopusVariable -name "currentAccessKeyID" -value ${active_key}
+#Set-OctopusVariable -name "newAccessKeyID" -value $(echo ${new_key} | jq -r '.[].AccessKeyId')
+#Set-OctopusVariable -name "newAccessKeySecret" -value $(echo ${new_key} | jq -r '.[].SecretAccessKey')
+#Set-OctopusVariable -name "userName" -value ${iam_account}
 
 # Set oldest active key as inactive
 aws iam update-access-key --access-key-id ${active_key} --status Inactive --user-name ${iam_account} >/dev/null 2>&1
