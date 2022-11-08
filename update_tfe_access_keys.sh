@@ -9,14 +9,18 @@ api_token=$(get_octopusvariable "tfe_api_token")
 tfe_url=$(get_octopusvariable "terraform_url")
 org=$(get_octopusvariable "org_name")
 
-# DEBUG
-echo "New Access Key ID is for ${iam_account} in AWS account #{"AWS_Account"} is" #{Octopus.Action[Rotate AWS Keys for Terraform].Output.new_access_key_id}
-echo "New Secret Key ID is for ${iam_account} in AWS account #{"AWS_Account"} is" #{Octopus.Action[Rotate AWS Keys for Terraform].Output.new_access_key_secret}
-
 # 1. Get access key values from Step 1
 aws_access_key_id="#{Octopus.Action[Rotate AWS Keys for Terraform].Output.current_access_key_id}"
 new_aws_access_key_id="#{Octopus.Action[Rotate AWS Keys for Terraform].Output.new_access_key_id}"
 new_aws_secret_key_id="#{Octopus.Action[Rotate AWS Keys for Terraform].Output.new_access_key_secret}"
+
+# For debugging key values
+debug () {
+  echo "New Access Key ID is for ${iam_account} is ${new_aws_access_key_id}"
+  echo "New Secret Key ID is for ${iam_account} is ${new_aws_secret_key_id}"
+}
+debug
+
 # Define headers for TFE API calls
 content_header="content-type: application/vnd.api+json"
 auth_header="Authorization: Bearer ${api_token}"
@@ -64,8 +68,8 @@ do
       json_payload="{ \"data\": { \"id\": \"${var_id}\", \"attributes\": { \"value\": \"${new_aws_access_key_id}\" }, \"type\": \"vars\" } }"
       curl -s -H "${content_header}" -H "${auth_header}" -X PATCH -d "${json_payload}" "${tfe_url}/workspaces/${target_workspaces[$workspace]}/vars/${var_id}"
     fi
-    if [ "${var_key}" == "AWS_SECRET_ACCESS_KEY_ID" ]; then
-      echo "Attempting to update AWS secret access key for workspace ${workspace}"
+    if [ "${var_key}" == "AWS_SECRET_ACCESS_KEY" ]; then
+      echo "Attempting to update AWS secret access key for workspace ${target}"
       json_payload="{ \"data\": { \"id\": \"${var_id}\", \"attributes\": { \"value\": \"${new_aws_secret_key_id}\" }, \"type\": \"vars\" } }"
       curl -s -H "${content_header}" -H "${auth_header}" -X PATCH -d "${json_payload}" "${tfe_url}/workspaces/${target_workspaces[$workspace]}/vars/${var_id}"
     fi
